@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.kgc.shop.mapper.SupertypeMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="SupertypeEntity" id="supertypeMap">
+        <result property="superId" column="super_id"/>
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+  
+  <!--要查询的字段-->  
+  <sql id="sel_SupertypeColumns_List" > 
+  	   super_id  ,        
+   type_name          
+  
+  </sql>
+  
+  <!--要添加的字段-->
+  <sql id="ins_SupertypeColumns_List" >
+       #{superId},   #{typeName}   </sql> 
+  
+  <!--要修改的字段-->
+  <sql id="upd_SupertypeColumns_List" >
+    <set>
+    <if test="t.typeName != null">type_name = #{t.typeName}</if>
+	</set>
+	where super_id = #{t.superId}
+  </sql> 
+  
+  <!--定义删除的条件-->
+  <sql id="del_SupertypePramas_List">
+    <where>
+    <if test="t.superId != null">and super_id = #{t.superId}</if>
+    <if test="t.typeName != null">and type_name = #{t.typeName}</if>
+	</where>
+  </sql> 
+  
+  <!--定义查询的条件-->
+  <sql id="sel_SupertypePramas_List">
+    <where>
+    <if test="t.superId != null">and super_id = #{t.superId}</if>
+    <if test="t.typeName != null">and type_name = #{t.typeName}</if>
+	</where>
+  </sql>
+
+    <!--添加-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="superId">
+        insert into supertype values (<include refid="ins_SupertypeColumns_List" />)
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        update supertype <include refid="upd_SupertypeColumns_List" />
+    </update>
+
+    <!--根据条件删除-->
+    <delete id="delete">
+        delete from supertype <include refid="del_SupertypePramas_List" />
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBatch">
+        delete from supertype where super_id in
+        <foreach item="superId" collection="array" open="(" separator="," close=")">
+            #{superId}
+        </foreach>
+    </delete>
+
+    <!--根据主键id查询单个对象-->
+	<select id="queryObjectById" resultMap="supertypeMap">
+		select  <include refid="sel_SupertypeColumns_List" />  from supertype where super_id = #{id}
+	</select>
+	
+	<!--查询所有对象-->
+	<select id="queryAll" resultMap="supertypeMap">
+		select  <include refid="sel_SupertypeColumns_List" />  from supertype
+    </select>
+
+    <!--根据条件（无条件）查询多个对象-->
+	<select id="queryManyByPramas" resultMap="supertypeMap">
+		select  <include refid="sel_SupertypeColumns_List" />  from supertype <include refid="sel_SupertypePramas_List" />
+	</select>
+	
+	<!--根据条件（无条件）分页查询-->
+	<select id="queryListByPramas" resultMap="supertypeMap">
+		select  <include refid="sel_SupertypeColumns_List" />  from supertype <include refid="sel_SupertypePramas_List" /> order by superId desc
+	</select>
+
+    <!--根据条件查询单条数据-->
+    <select id="queryObjectByPramas" resultMap="supertypeMap">
+        select  <include refid="sel_SupertypeColumns_List" />  from supertype <include refid="sel_SupertypePramas_List" />
+    </select>
+	
+	<!--根据条件（无条件）查询数据条数-->
+ 	<select id="queryTotalByPramas" resultType="java.lang.Long">
+		select count(*) from supertype <include refid="sel_SupertypePramas_List" />
+	</select>
+	
+
+
+</mapper>

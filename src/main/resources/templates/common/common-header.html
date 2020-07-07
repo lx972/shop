@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <header th:fragment="common-header">
+
+        <header id="mr-header" class="wrap mr-header">
+            <div class="container">
+                <div class="row">
+                    <!-- //网站Logo -->
+                    <!-- 主导航条 -->
+                    <nav id="mr-mainnav"
+                         class="col-xs-12 col-md-6 mr-mainnav navbar navbar-default">
+                        <div class="mr-navbar navbar-collapse collapse">
+                            <div class="mr-megamenu animate slide" data-duration="400"
+                                 data-responsive="true">
+                                <ul class="nav navbar-nav level0" id="menu">
+
+
+                                    <!--<li itemprop="name" data-id="435" data-level="1">
+                                        <a itemprop="url" class="" href="/model/toIndex" data-target="#">首页 </a>
+                                    </li>
+                                    <li itemprop="name" data-id="510" data-level="1">
+                                        <a itemprop="url" class="" href="/model/toGoodList?superType=" data-target="#">图书类</a>
+                                    </li>
+
+                                    <li itemprop="name" data-id="510" data-level="1"><a
+                                            id="wenyi" itemprop="url" class="" href="goodsList.jsp?type=15"
+                                            data-target="#">家电类</a></li>
+
+                                    <li itemprop="name" data-id="510" data-level="1"><a
+                                            id="jiaoyu" itemprop="url" class="" href="goodsList.jsp?type=16"
+                                            data-target="#">服装类</a></li>
+                                    <li itemprop="name" data-id="510" data-level="1"><a
+                                            id="shenghuo" itemprop="url" class=""
+                                            href="goodsList.jsp?type=17" data-target="#">电子类</a></li>-->
+
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </nav>
+                    <!-- //主导航条 -->
+                </div>
+            </div>
+        </header>
+        <script>
+            layui.use(['layer','jquery'], function() {
+                var layer = layui.layer;
+                var $ = layui.jquery;
+
+                //查询商品大分类菜单信息
+                loadSuperTypeName();
+
+
+
+                //查询商品大分类菜单信息
+                function loadSuperTypeName() {
+                    $.ajax({
+                        url:"/supertype/allByPramas",
+                        async:false,
+                        type:"post",
+                        error:function () {
+                            layer.msg("服务器异常");
+                        },
+                        success:function (result) {
+                            if (result.code === 0) {
+                                //查到了
+                                console.log(result.data);
+                                var str="<li itemprop=\"name\" data-id=\"435\" data-level=\"1\">\n" +
+                                    "                                        <a itemprop=\"url\" class=\"\" href=\"/model/toIndex\" data-target=\"首页\">首页 </a>\n" +
+                                    "                                    </li>";
+                                for (var i = 0; i < result.data.length; i++) {
+                                    str+="<li itemprop=\"name\" data-id=\"510\" data-level=\"1\">\n" +
+                                        "                                        <a itemprop=\"url\" class=\"\" href=\"/model/toGoodList?superType="+result.data[i].superId+
+                                        "\" data-target=\""+result.data[i].typeName+"\">"+result.data[i].typeName+"</a>\n" +
+                                        "                                    </li>" ;
+                                }
+                                $("#menu").html(str);
+                            }
+                        }
+                    })
+                }
+            })
+
+
+        </script>
+
+</header>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.kgc.shop.mapper.OrderMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="OrderEntity" id="orderMap">
+        <result property="orderId" column="order_id"/>
+        <result property="bNumber" column="b_number"/>
+        <result property="userName" column="user_name"/>
+        <result property="recevieName" column="recevie_name"/>
+        <result property="address" column="address"/>
+        <result property="tel" column="tel"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="bz" column="bz"/>
+        <collection property="detailList" column="order_id" select="cn.kgc.shop.mapper.OrderDetailMapper.queryOrderDetailListByOrderId" fetchType="lazy">
+        </collection>
+    </resultMap>
+  
+  <!--要查询的字段-->  
+  <sql id="sel_OrderColumns_List" > 
+  	   order_id  ,        
+   b_number  ,        
+   user_name  ,        
+   recevie_name  ,        
+  address ,        
+  tel ,        
+   order_date  ,        
+  bz         
+  
+  </sql>
+  
+  <!--要添加的字段-->
+  <sql id="ins_OrderColumns_List" >
+       #{orderId},   #{bNumber},   #{userName},   #{recevieName},   #{address},   #{tel},   #{orderDate},   #{bz}   </sql> 
+  
+  <!--要修改的字段-->
+  <sql id="upd_OrderColumns_List" >
+    <set>
+    <if test="t.bNumber != null">b_number = #{t.bNumber}, </if>
+    <if test="t.userName != null">user_name = #{t.userName}, </if>
+    <if test="t.recevieName != null">recevie_name = #{t.recevieName}, </if>
+    <if test="t.address != null">address = #{t.address}, </if>
+    <if test="t.tel != null">tel = #{t.tel}, </if>
+    <if test="t.orderDate != null">order_date = #{t.orderDate}, </if>
+    <if test="t.bz != null">bz = #{t.bz}</if>
+	</set>
+	where order_id = #{t.orderId}
+  </sql> 
+  
+  <!--定义删除的条件-->
+  <sql id="del_OrderPramas_List">
+    <where>
+    <if test="t.orderId != null">and order_id = #{t.orderId}</if>
+    <if test="t.bNumber != null">and b_number = #{t.bNumber}</if>
+    <if test="t.userName != null">and user_name = #{t.userName}</if>
+    <if test="t.recevieName != null">and recevie_name = #{t.recevieName}</if>
+    <if test="t.address != null">and address = #{t.address}</if>
+    <if test="t.tel != null">and tel = #{t.tel}</if>
+    <if test="t.orderDate != null">and order_date = #{t.orderDate}</if>
+    <if test="t.bz != null">and bz = #{t.bz}</if>
+	</where>
+  </sql> 
+  
+  <!--定义查询的条件-->
+  <sql id="sel_OrderPramas_List">
+    <where>
+    <if test="t.orderId != null">and order_id = #{t.orderId}</if>
+    <if test="t.bNumber != null">and b_number = #{t.bNumber}</if>
+    <if test="t.userName != null">and user_name = #{t.userName}</if>
+    <if test="t.recevieName != null">and recevie_name = #{t.recevieName}</if>
+    <if test="t.address != null">and address = #{t.address}</if>
+    <if test="t.tel != null">and tel = #{t.tel}</if>
+    <if test="t.orderDate != null">and order_date = #{t.orderDate}</if>
+    <if test="t.bz != null">and bz = #{t.bz}</if>
+	</where>
+  </sql>
+
+    <!--添加-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="orderId">
+        insert into `order` values (<include refid="ins_OrderColumns_List" />)
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        update `order` <include refid="upd_OrderColumns_List" />
+    </update>
+
+    <!--根据条件删除-->
+    <delete id="delete">
+        delete from `order` <include refid="del_OrderPramas_List" />
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBatch">
+        delete from `order` where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+    <!--根据主键id查询单个对象-->
+	<select id="queryObjectById" resultMap="orderMap">
+		select  <include refid="sel_OrderColumns_List" />  from `order` where order_id = #{id}
+	</select>
+	
+	<!--查询所有对象-->
+	<select id="queryAll" resultMap="orderMap">
+		select  <include refid="sel_OrderColumns_List" />  from `order`
+    </select>
+
+    <!--根据条件（无条件）查询多个对象-->
+	<select id="queryManyByPramas" resultMap="orderMap">
+		select  <include refid="sel_OrderColumns_List" />  from `order` <include refid="sel_OrderPramas_List" />
+	</select>
+	
+	<!--根据条件（无条件）分页查询-->
+	<select id="queryListByPramas" resultMap="orderMap">
+		select  <include refid="sel_OrderColumns_List" />  from `order` <include refid="sel_OrderPramas_List" /> order by order_date desc
+	</select>
+
+    <!--根据条件查询单条数据-->
+    <select id="queryObjectByPramas" resultMap="orderMap">
+        select  <include refid="sel_OrderColumns_List" />  from `order` <include refid="sel_OrderPramas_List" />
+    </select>
+	
+	<!--根据条件（无条件）查询数据条数-->
+ 	<select id="queryTotalByPramas" resultType="java.lang.Long">
+		select count(*) from `order` <include refid="sel_OrderPramas_List" />
+	</select>
+	
+
+
+</mapper>

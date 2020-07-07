@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="relatedGood">
+
+        <div class="row" id="relatedGood">
+
+
+
+         <!--   <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12">
+                <div class="product-grid transition">
+                    <div class="actions">
+                        <div class="image">
+                            <a href="/model/toGoodDetail?goodsId="><img
+                                    src="../images/goods/<%=relate_picture%>"> </a>
+                        </div>
+                        <div class="button-group">
+                            <div class="cart">
+                                <button class="btn btn-primary btn-primary" type="button"
+                                        data-toggle="tooltip" title=""
+                                        value=""
+                                        data-original-title="加入购物车">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="caption">
+                        <div class="name" style="height: 40px">
+                            <a style="width: 90%" href="/model/toGoodDetail?goodsId="><span
+                                    style="color: #0885B1">名称:</span> <%=relate_goodsName%> </a>
+                        </div>
+
+                        <p class="price" style="margin-top: 40px">
+					        <span class="price-tax">价格:<%=relate_nowprice%> 元</span>
+                        </p>
+                    </div>
+                </div>
+            </div>-->
+
+
+        </div>
+
+<script>
+    layui.use(['layer','jquery'], function() {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        //查询相关商品信息
+        getRelatedGood();
+        //购物车按钮绑定事件
+        addCar();
+
+
+        //查询相关商品信息
+        function getRelatedGood() {
+            var typeId=$("#typeId").val();
+            $.ajax({
+                url:"/goods/allByPramas",
+                async:false,
+                data:{"typeId":typeId},
+                type:"post",
+                error:function () {
+                    layer.msg("服务器异常");
+                },
+                success:function (result) {
+                    if (result.code === 0) {
+                        //查到了
+                        console.log(result.data);
+                        var str='';
+                        for (var i = 0; i < result.data.length; i++) {
+                            str+="<div class='col-lg-2 col-md-3 col-sm-4 col-xs-12'>\n" +
+                                "                <div class='product-grid transition'>\n" +
+                                "                    <div class='actions'>\n" +
+                                "                        <div class='image'>\n" +
+                                "                            <a href='/model/toGoodDetail?goodsId="+result.data[i].goodsId+"'><img\n" +
+                                "                                    src='"+result.data[i].picture+"'> </a>\n" +
+                                "                        </div>\n" +
+                                "                        <div class='button-group'>\n" +
+                                "                            <div class='cart'>\n" +
+                                "                                <button class='btn btn-primary btn-primary' type='button'\n" +
+                                "                                        data-toggle='tooltip' title=''\n" +
+                                "                                        value='"+result.data[i].goodsId+"'\n" +
+                                "                                        data-original-title='加入购物车'>\n" +
+                                "                                    <i class='fa fa-shopping-cart'></i>\n" +
+                                "                                </button>\n" +
+                                "                            </div>\n" +
+                                "\n" +
+                                "                        </div>\n" +
+                                "                    </div>\n" +
+                                "                    <div class='caption'>\n" +
+                                "                        <div class='name' style='height: 40px'>\n" +
+                                "                            <a style='width: 90%' href='/model/toGoodDetail?goodsId="+result.data[i].goodsId+"'><span\n" +
+                                "                                    style='color: #0885B1'>名称:</span>"+result.data[i].goodName+" </a>\n" +
+                                "                        </div>\n" +
+                                "\n" +
+                                "                        <p class='price' style='margin-top: 40px'>\n" +
+                                "\t\t\t\t\t        <span class='price-tax'>价格:"+result.data[i].nowPrice+" 元</span>\n" +
+                                "                        </p>\n" +
+                                "                    </div>\n" +
+                                "                </div>\n" +
+                                "            </div>";
+                        }
+                        $("#relatedGood").html(str);
+                    }
+                }
+            })
+        }
+
+        //为加入购物车按钮绑定事件
+        function addCar() {
+            //为加入购物车按钮绑定事件
+            $(".cart>button").click(function () {
+                var goodsId=$(".cart>button").val();
+                //将商品添加到购物车
+                $.ajax({
+                    url: "/goods/addGoodToCar",
+                    async: false,
+                    type: "post",
+                    data:{"goodsId":goodsId},
+                    error: function () {
+                        layer.msg("服务器异常");
+                    },
+                    success: function (result) {
+                        if (result.msg === "unlogin") {
+                            console.log(result);
+                            layer.msg("用户未登录，请先登录");
+                            setTimeout(function () {
+                                window.location.href="/model/toLogin"
+                            },2000);
+                        }else if (result.code === 0) {
+                            console.log(result);
+                            layer.msg("加入购物车成功");
+                            setTimeout(function () {
+                                window.location.href="/model/toGoodCar"
+                            },2000);
+                        }
+                    }
+                });
+            })
+        }
+    })
+</script>
+
+    </div>
+</body>
+</html>

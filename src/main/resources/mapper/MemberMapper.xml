@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.kgc.shop.mapper.MemberMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="MemberEntity" id="memberMap">
+        <result property="memberId" column="member_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="trueName" column="true_name"/>
+        <result property="pwd" column="pwd"/>
+        <result property="city" column="city"/>
+        <result property="address" column="address"/>
+        <result property="postCode" column="post_code"/>
+        <result property="cardNo" column="card_no"/>
+        <result property="cardType" column="card_type"/>
+        <result property="grade" column="grade"/>
+        <result property="amount" column="amount"/>
+        <result property="tel" column="tel"/>
+        <result property="email" column="email"/>
+        <result property="freeze" column="freeze"/>
+    </resultMap>
+  
+  <!--要查询的字段-->  
+  <sql id="sel_MemberColumns_List" > 
+  	   member_id  ,        
+   user_name  ,        
+   true_name  ,        
+  pwd ,        
+  city ,        
+  address ,        
+   post_code  ,        
+   card_no  ,        
+   card_type  ,        
+  grade ,        
+  amount ,        
+  tel ,        
+  email ,        
+  freeze         
+  
+  </sql>
+  
+  <!--要添加的字段-->
+  <sql id="ins_MemberColumns_List" >
+       #{memberId},   #{userName},   #{trueName},   #{pwd},   #{city},   #{address},   #{postCode},   #{cardNo},   #{cardType},   #{grade},   #{amount},   #{tel},   #{email},   #{freeze}   </sql> 
+  
+  <!--要修改的字段-->
+  <sql id="upd_MemberColumns_List" >
+    <set>
+    <if test="t.userName != null">user_name = #{t.userName}, </if>
+    <if test="t.trueName != null">true_name = #{t.trueName}, </if>
+    <if test="t.pwd != null">pwd = #{t.pwd}, </if>
+    <if test="t.city != null">city = #{t.city}, </if>
+    <if test="t.address != null">address = #{t.address}, </if>
+    <if test="t.postCode != null">post_code = #{t.postCode}, </if>
+    <if test="t.cardNo != null">card_no = #{t.cardNo}, </if>
+    <if test="t.cardType != null">card_type = #{t.cardType}, </if>
+    <if test="t.grade != null">grade = #{t.grade}, </if>
+    <if test="t.amount != null">amount = #{t.amount}, </if>
+    <if test="t.tel != null">tel = #{t.tel}, </if>
+    <if test="t.email != null">email = #{t.email}, </if>
+    <if test="t.freeze != null">freeze = #{t.freeze}</if>
+	</set>
+	where member_id = #{t.memberId}
+  </sql> 
+  
+  <!--定义删除的条件-->
+  <sql id="del_MemberPramas_List">
+    <where>
+    <if test="t.memberId != null">and member_id = #{t.memberId}</if>
+    <if test="t.userName != null">and user_name = #{t.userName}</if>
+    <if test="t.trueName != null">and true_name = #{t.trueName}</if>
+    <if test="t.pwd != null">and pwd = #{t.pwd}</if>
+    <if test="t.city != null">and city = #{t.city}</if>
+    <if test="t.address != null">and address = #{t.address}</if>
+    <if test="t.postCode != null">and post_code = #{t.postCode}</if>
+    <if test="t.cardNo != null">and card_no = #{t.cardNo}</if>
+    <if test="t.cardType != null">and card_type = #{t.cardType}</if>
+    <if test="t.grade != null">and grade = #{t.grade}</if>
+    <if test="t.amount != null">and amount = #{t.amount}</if>
+    <if test="t.tel != null">and tel = #{t.tel}</if>
+    <if test="t.email != null">and email = #{t.email}</if>
+    <if test="t.freeze != null">and freeze = #{t.freeze}</if>
+	</where>
+  </sql> 
+  
+  <!--定义查询的条件-->
+  <sql id="sel_MemberPramas_List">
+    <where>
+    <if test="t.memberId != null">and member_id = #{t.memberId}</if>
+    <if test="t.userName != null">and user_name = #{t.userName}</if>
+    <if test="t.trueName != null">and true_name = #{t.trueName}</if>
+    <if test="t.pwd != null">and pwd = #{t.pwd}</if>
+    <if test="t.city != null">and city = #{t.city}</if>
+    <if test="t.address != null">and address = #{t.address}</if>
+    <if test="t.postCode != null">and post_code = #{t.postCode}</if>
+    <if test="t.cardNo != null">and card_no = #{t.cardNo}</if>
+    <if test="t.cardType != null">and card_type = #{t.cardType}</if>
+    <if test="t.grade != null">and grade = #{t.grade}</if>
+    <if test="t.amount != null">and amount = #{t.amount}</if>
+    <if test="t.tel != null">and tel = #{t.tel}</if>
+    <if test="t.email != null">and email = #{t.email}</if>
+    <if test="t.freeze != null">and freeze = #{t.freeze}</if>
+	</where>
+  </sql>
+
+    <!--添加-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="memberId">
+        insert into member values (<include refid="ins_MemberColumns_List" />)
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        update member <include refid="upd_MemberColumns_List" />
+    </update>
+
+    <!--根据条件删除-->
+    <delete id="delete">
+        delete from member <include refid="del_MemberPramas_List" />
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBatch">
+        delete from member where member_id in
+        <foreach item="memberId" collection="array" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </delete>
+
+    <!--根据主键id查询单个对象-->
+	<select id="queryObjectById" resultMap="memberMap">
+		select  <include refid="sel_MemberColumns_List" />  from member where member_id = #{id}
+	</select>
+	
+	<!--查询所有对象-->
+	<select id="queryAll" resultMap="memberMap">
+		select  <include refid="sel_MemberColumns_List" />  from member
+    </select>
+
+    <!--根据条件（无条件）查询多个对象-->
+	<select id="queryManyByPramas" resultMap="memberMap">
+		select  <include refid="sel_MemberColumns_List" />  from member <include refid="sel_MemberPramas_List" />
+	</select>
+	
+	<!--根据条件（无条件）分页查询-->
+	<select id="queryListByPramas" resultMap="memberMap">
+		select  <include refid="sel_MemberColumns_List" />  from member <include refid="sel_MemberPramas_List" /> order by memberId desc
+	</select>
+
+    <!--根据条件查询单条数据-->
+    <select id="queryObjectByPramas" resultMap="memberMap">
+        select  <include refid="sel_MemberColumns_List" />  from member <include refid="sel_MemberPramas_List" />
+    </select>
+	
+	<!--根据条件（无条件）查询数据条数-->
+ 	<select id="queryTotalByPramas" resultType="java.lang.Long">
+		select count(*) from member <include refid="sel_MemberPramas_List" />
+	</select>
+	
+
+
+</mapper>

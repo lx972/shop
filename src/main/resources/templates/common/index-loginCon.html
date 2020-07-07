@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="index-loginCon">
+
+    <!--未登录时显示-->
+    <div th:if="${session.loginUser==null}">
+        <div id="toolbar" style="background-color: #F0F0F0; width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="toolbar-ct-1">
+                        <p>
+                            <i class="fa fa-phone"></i> <span style="margin-right: 15px;">电话：400-675-1066</span><a
+                                href="/model/toLogin">登录</a>&nbsp; ｜ &nbsp;<a href="/model/toRegister">注册</a>
+                        </p>
+                    </div>
+                    <div class="toolbar-ct-2">
+                        <a href="/model/toOrder">我的订单</a>&nbsp;&nbsp; | &nbsp;&nbsp; 我的收藏
+                    </div>
+                </div>
+            </div>
+            <div style="background-color: white; width: 100%">
+                <div class="container">
+                    <div class="row">
+                        <div class="toolbar-ct col-xs-12 col-md-6  hidden-sm hidden-xs">
+                            <div class="toolbar-ct-1">
+                                <img src="/static/front/images/51logo.png">
+                            </div>
+                            <div>
+                                <!-- 搜索条 -->
+                                <div class="search_box">
+                                    <div class="top-nav-search">
+                                        <form id="search" method="post" action="/model/toSearchResult">
+                                            <input type="text" name="goodName" size="38"
+                                                   style="border: 0px;" class="top-nav-search-input"
+                                                   placeholder="请输入内容" /> <input type="image"
+                                                                                 src="/static/front/images/search.png" class="search_box_img"
+                                                                                 onFocus="this.blur()" />
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- //搜索条 -->
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="toolbar-ct toolbar-ct-right col-xs-12 col-md-3">
+
+
+                            <div class="toolbar-ct-2 "
+                                 style="margin-top: 35px; border: 1px solid #EAEAEA; padding: 5px;">
+                                <a href="/model/toGoodCar" style="color: #E33737; font-size: 20px;"><i
+                                        class="fa fa-cart1"></i> 我的购物车</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--登录时显示-->
+    <div th:if="${session.loginUser!=null}">
+        <div id="toolbar" style="background-color: #F0F0F0; width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="toolbar-ct-1">
+                        <p>
+                            <i class="fa fa-phone"></i>
+                            <span style="margin-right: 15px;">电话：400-675-1066</span>您好，
+                            <span th:text="${session.loginUser.userName}"></span>
+                            &nbsp; &nbsp;<a href="/model/toModifyMember">修改</a>&nbsp;&nbsp;
+                            |&nbsp;&nbsp;<a id="logout">退出</a>
+                        </p>
+                    </div>
+                    <div class="toolbar-ct-2">
+                        <a href="/model/toOrder">我的订单</a>&nbsp;&nbsp; | &nbsp;&nbsp; <a
+                            href="">我的收藏</a>
+                    </div>
+                </div>
+            </div>
+            <div style="background-color: white; width: 100%">
+                <div class="container">
+                    <div class="row">
+                        <div class="toolbar-ct col-xs-12 col-md-6  hidden-sm hidden-xs">
+                            <div class="toolbar-ct-1">
+                                <img src="/static/front/images/51logo.png">
+                            </div>
+                            <div>
+                                <!-- 搜索条 -->
+                                <div class="search_box">
+                                    <div class="top-nav-search">
+                                        <form id="search" method="post" action="/model/toSearchResult">
+                                            <input type="text" name="goodName" size="38"
+                                                   style="border: 0px;" class="top-nav-search-input"
+                                                   placeholder="请输入内容" /> <input type="image"
+                                                                                 src="/static/front/images/search.png" class="search_box_img"
+                                                                                 onFocus="this.blur()" />
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- //搜索条 -->
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="toolbar-ct toolbar-ct-right col-xs-12 col-md-3">
+
+
+                            <div class="toolbar-ct-2 "
+                                 style="margin-top: 35px; border: 1px solid #EAEAEA; padding: 5px;">
+                                <a href="/model/toGoodCar" style="color: #E33737; font-size: 20px;"><i
+                                        class="fa fa-cart1"></i> 我的购物车</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        <script>
+            layui.use(['layer','jquery'], function() {
+                var layer = layui.layer;
+                var $ = layui.jquery;
+                //退出登录
+                $("#logout").click(function () {
+                    $.ajax({
+                        url: "/member/logout",
+                        type: "post",
+                        async: false,
+                        error: function () {
+                            alert("退出失败");
+                        },
+                        success: function (result) {
+                            if (result.code === 0) {
+                                setTimeout(function () {
+                                    window.location.href = "/model/toLogin"
+                                }, 2000)
+                            }
+                        }
+                    })
+                })
+                //搜素
+                function blur() {
+                    //提交表单
+                    $("#search").submit();
+                }
+
+
+            })
+        </script>
+
+
+</div>
+
+</body>
+</html>

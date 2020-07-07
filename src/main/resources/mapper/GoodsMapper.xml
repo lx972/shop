@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.kgc.shop.mapper.GoodsMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="GoodsEntity" id="goodsMap">
+        <result property="goodsId" column="goods_id"/>
+        <result property="typeId" column="type_id"/>
+        <result property="goodName" column="good_name"/>
+        <result property="introduce" column="introduce"/>
+        <result property="price" column="price"/>
+        <result property="nowPrice" column="now_price"/>
+        <result property="picture" column="picture"/>
+        <result property="inTime" column="in_time"/>
+        <result property="newGoods" column="new_goods"/>
+        <result property="sale" column="sale"/>
+        <result property="hit" column="hit"/>
+        <!--自行添加的属性映射-->
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+  
+  <!--要查询的字段-->  
+  <sql id="sel_GoodsColumns_List" > 
+  	   goods_id  ,        
+   type_id  ,        
+   good_name  ,        
+  introduce ,        
+  price ,        
+   now_price  ,        
+  picture ,        
+   in_time  ,        
+   new_goods  ,        
+  sale ,        
+  hit         
+  
+  </sql>
+  
+  <!--要添加的字段-->
+  <sql id="ins_GoodsColumns_List" >
+       #{goodsId},   #{typeId},   #{goodName},   #{introduce},   #{price},   #{nowPrice},   #{picture},   #{inTime},   #{newGoods},   #{sale},   #{hit}   </sql> 
+  
+  <!--要修改的字段-->
+  <sql id="upd_GoodsColumns_List" >
+    <set>
+    <if test="t.typeId != null">type_id = #{t.typeId}, </if>
+    <if test="t.goodName != null">good_name = #{t.goodName}, </if>
+    <if test="t.introduce != null">introduce = #{t.introduce}, </if>
+    <if test="t.price != null">price = #{t.price}, </if>
+    <if test="t.nowPrice != null">now_price = #{t.nowPrice}, </if>
+    <if test="t.picture != null">picture = #{t.picture}, </if>
+    <if test="t.inTime != null">in_time = #{t.inTime}, </if>
+    <if test="t.newGoods != null">new_goods = #{t.newGoods}, </if>
+    <if test="t.sale != null">sale = #{t.sale}, </if>
+    <if test="t.hit != null">hit = #{t.hit}</if>
+	</set>
+	where goods_id = #{t.goodsId}
+  </sql> 
+  
+  <!--定义删除的条件-->
+  <sql id="del_GoodsPramas_List">
+    <where>
+    <if test="t.goodsId != null">and goods_id = #{t.goodsId}</if>
+    <if test="t.typeId != null">and type_id = #{t.typeId}</if>
+    <if test="t.goodName != null">and good_name = #{t.goodName}</if>
+    <if test="t.introduce != null">and introduce = #{t.introduce}</if>
+    <if test="t.price != null">and price = #{t.price}</if>
+    <if test="t.nowPrice != null">and now_price = #{t.nowPrice}</if>
+    <if test="t.picture != null">and picture = #{t.picture}</if>
+    <if test="t.inTime != null">and in_time = #{t.inTime}</if>
+    <if test="t.newGoods != null">and new_goods = #{t.newGoods}</if>
+    <if test="t.sale != null">and sale = #{t.sale}</if>
+    <if test="t.hit != null">and hit = #{t.hit}</if>
+	</where>
+  </sql> 
+  
+  <!--定义查询的条件-->
+  <sql id="sel_GoodsPramas_List">
+    <where>
+    <if test="t.goodsId != null">and goods_id = #{t.goodsId}</if>
+    <if test="t.typeId != null">and type_id = #{t.typeId}</if>
+    <if test="t.goodName != null">and good_name = #{t.goodName}</if>
+    <if test="t.introduce != null">and introduce = #{t.introduce}</if>
+    <if test="t.price != null">and price = #{t.price}</if>
+    <if test="t.nowPrice != null">and now_price = #{t.nowPrice}</if>
+    <if test="t.picture != null">and picture = #{t.picture}</if>
+    <if test="t.inTime != null">and in_time = #{t.inTime}</if>
+    <if test="t.newGoods != null">and new_goods = #{t.newGoods}</if>
+    <if test="t.sale != null">and sale = #{t.sale}</if>
+    <if test="t.hit != null">and hit = #{t.hit}</if>
+	</where>
+  </sql>
+
+    <!--添加-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="goodsId">
+        insert into goods values (<include refid="ins_GoodsColumns_List" />)
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        update goods <include refid="upd_GoodsColumns_List" />
+    </update>
+
+    <!--根据条件删除-->
+    <delete id="delete">
+        delete from goods <include refid="del_GoodsPramas_List" />
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBatch">
+        delete from goods where goods_id in
+        <foreach item="goodsId" collection="array" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </delete>
+
+    <!--根据主键id查询单个对象-->
+	<select id="queryObjectById" resultMap="goodsMap">
+		select  <include refid="sel_GoodsColumns_List" />  from goods where goods_id = #{id}
+	</select>
+	
+	<!--查询所有对象-->
+	<select id="queryAll" resultMap="goodsMap">
+		select  <include refid="sel_GoodsColumns_List" />  from goods
+    </select>
+
+    <!--根据条件（无条件）查询多个对象-->
+	<select id="queryManyByPramas" resultMap="goodsMap">
+		select  <include refid="sel_GoodsColumns_List" />  from goods <include refid="sel_GoodsPramas_List" />
+	</select>
+	
+	<!--根据条件（无条件）分页查询-->
+	<select id="queryListByPramas" resultMap="goodsMap">
+		select  <include refid="sel_GoodsColumns_List" />  from goods <include refid="sel_GoodsPramas_List" /> order by goodsId desc
+	</select>
+
+    <!--根据条件查询单条数据-->
+    <select id="queryObjectByPramas" resultMap="goodsMap">
+        select  <include refid="sel_GoodsColumns_List" />  from goods <include refid="sel_GoodsPramas_List" />
+    </select>
+	
+	<!--根据条件（无条件）查询数据条数-->
+ 	<select id="queryTotalByPramas" resultType="java.lang.Long">
+		select count(*) from goods <include refid="sel_GoodsPramas_List" />
+	</select>
+
+
+
+    <!--查询热门商品信息-->
+    <select id="getHitGoods" resultMap="goodsMap">
+        select goods_id,good_name,price,now_price,picture from goods order by hit desc
+        limit 0,2
+    </select>
+
+
+    <!--查询最新上架的商品信息-->
+    <select id="getNewGoods" resultMap="goodsMap">
+        SELECT t1.goods_id,t1.good_name,t1.now_price,t1.picture,t2.type_name
+        FROM goods t1,subtype t2
+        WHERE t1.type_id=t2.sub_id and t1.new_goods=1
+        ORDER BY t1.in_time DESC
+        limit 0,12;
+    </select>
+
+
+    <!--查询最新打折的商品信息-->
+    <select id="getSaleGoods" resultMap="goodsMap">
+        SELECT t1.goods_id,t1.good_name,t1.now_price,t1.price,t1.introduce,t1.picture,t2.type_name
+        FROM goods t1,subtype t2
+        WHERE t1.type_id=t2.sub_id and t1.sale=1
+        ORDER BY t1.in_time DESC
+        limit 0,12;
+    </select>
+
+
+    <!--查询分类后的热门商品信息-->
+    <select id="getLeftHotGoods" resultMap="goodsMap">
+        SELECT t1.goods_id,t1.good_name,t1.now_price,t1.picture
+        FROM goods t1,subtype t2
+        WHERE t1.type_id=t2.sub_id and t2.super_type=#{super_type}
+        ORDER BY hit DESC
+        limit 0,7;
+    </select>
+
+
+    <!--商品名模糊查询-->
+    <select id="getGoodByGoodName" resultMap="goodsMap">
+        SELECT t1.goods_id,t1.good_name,t1.now_price,t1.picture,t2.type_name
+        FROM goods t1,subtype t2
+        WHERE t1.type_id=t2.sub_id and t1.good_name like "%"#{goodName}"%"
+        ORDER BY t1.in_time DESC
+    </select>
+
+    <!--查询分类后全部商品信息-->
+    <select id="getAllGoodsByOne" resultMap="goodsMap">
+        SELECT t1.goods_id,t1.good_name,t1.now_price,t1.picture,t2.type_name
+        FROM goods t1,subtype t2
+        WHERE t1.type_id=t2.sub_id and t2.super_type=#{super_type}
+        ORDER BY t1.in_time DESC
+    </select>
+
+</mapper>
